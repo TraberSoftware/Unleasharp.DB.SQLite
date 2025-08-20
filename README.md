@@ -36,7 +36,7 @@ The `ConnectorManager` handles database connections. You can initialize it using
 
 ### Using Connection String
 ```csharp
-ConnectorManager DBConnector = new ConnectorManager("Server=localhost;Database=unleasharp;Uid=unleasharp;Pwd=unleasharp;");
+ConnectorManager DBConnector = new ConnectorManager("Data Source=unleasharp.db;Version=3;");
 ```
 
 ### Using Fluent Configuration
@@ -45,14 +45,14 @@ ConnectorManager DBConnector = new ConnectorManager()
     .WithAutomaticConnectionRenewal(true)
     .WithAutomaticConnectionRenewalInterval(TimeSpan.FromHours(1))
     .Configure(config => {
-        config.ConnectionString = "Server=localhost;Database=unleasharp;Uid=unleasharp;Pwd=unleasharp;";
+        config.ConnectionString = "Data Source=unleasharp.db;Version=3;";
     });
 ```
 
 ### Using SQLiteConnectionStringBuilder
 ```csharp
 ConnectorManager DBConnector = new ConnectorManager(
-    new SQLiteConnectionStringBuilder("Server=localhost;Database=unleasharp;Uid=unleasharp;Pwd=unleasharp;")
+    new SQLiteConnectionStringBuilder("Data Source=unleasharp.db;Version=3;")
 );
 ```
 
@@ -70,22 +70,22 @@ namespace Unleasharp.DB.SQLite.Sample;
 [Key("id", Field = "id", KeyType = Unleasharp.DB.Base.QueryBuilding.KeyType.PRIMARY)]
 public class ExampleTable 
 {
-    [Column("id", "bigint", Unsigned = true, PrimaryKey = true, AutoIncrement = true, NotNull = true, Length = 20)]
+    [Column("id", "integer", Unsigned = true, PrimaryKey = true, AutoIncrement = true, NotNull = true, Length = 20)]
     public ulong? ID { get; set; }
     
-    [Column("_mediumtext", "mediumtext")]
+    [Column("_mediumtext", "text")]
     public string MediumText { get; set; }
     
-    [Column("_longtext", "longtext")]
+    [Column("_longtext", "text")]
     public string _longtext { get; set; }
     
-    [Column("_json", "longtext")]
+    [Column("_json", "text")]
     public string _json { get; set; }
     
-    [Column("_longblob", "longblob")]
+    [Column("_longblob", "blob")]
     public byte[] CustomFieldName { get; set; }
     
-    [Column("_enum", "enum")]
+    [Column("_enum", "text")]
     public EnumExample? _enum { get; set; }
     
     [Column("_varchar", "varchar", Length = 255)]
@@ -116,7 +116,7 @@ internal class Program
     static void Main(string[] args) 
     {
         // Initialize database connection
-        ConnectorManager DBConnector = new ConnectorManager("Server=192.168.1.8;Database=unleasharp;Uid=unleasharp;Pwd=unleasharp;");
+        ConnectorManager DBConnector = new ConnectorManager("Data Source=unleasharp.db;Version=3;");
         
         // Create table
         DBConnector.QueryBuilder().Build(Query => Query.Create<ExampleTable>()).Execute();
