@@ -67,29 +67,28 @@ using Unleasharp.DB.Base.SchemaDefinition;
 namespace Unleasharp.DB.SQLite.Sample;
 
 [Table("example_table")]
-[Key("id", Field = "id", KeyType = Unleasharp.DB.Base.QueryBuilding.KeyType.PRIMARY)]
 public class ExampleTable 
 {
-    [Column("id", "integer", Unsigned = true, PrimaryKey = true, AutoIncrement = true, NotNull = true, Length = 20)]
-    public ulong? ID { get; set; }
-    
+    [Column("id", "integer", Unsigned = true, PrimaryKey = true, AutoIncrement = true, NotNull = true)]
+    public long? Id         { get; set; }
+
     [Column("_mediumtext", "text")]
     public string MediumText { get; set; }
-    
+
     [Column("_longtext", "text")]
-    public string _longtext { get; set; }
-    
+    public string Longtext  { get; set; }
+
     [Column("_json", "text")]
-    public string _json { get; set; }
-    
+    public string Json      { get; set; }
+
     [Column("_longblob", "blob")]
     public byte[] CustomFieldName { get; set; }
-    
+
     [Column("_enum", "text")]
-    public EnumExample? _enum { get; set; }
-    
+    public EnumExample? Enum { get; set; }
+
     [Column("_varchar", "varchar", Length = 255)]
-    public string _varchar { get; set; }
+    public string Varchar { get; set; }
 }
 
 public enum EnumExample 
