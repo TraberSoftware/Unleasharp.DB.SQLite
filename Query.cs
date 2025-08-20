@@ -442,7 +442,9 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
             columnType = Nullable.GetUnderlyingType(columnType);
         }
 
-        StringBuilder columnBuilder = new StringBuilder($"{Query.FieldDelimiter}{tableColumn.Name}{Query.FieldDelimiter} {tableColumn.DataType}");
+        string columnDataTypeString = tableColumn.DataTypeString ?? this.GetColumnDataTypeString(tableColumn.DataType);
+
+        StringBuilder columnBuilder = new StringBuilder($"{Query.FieldDelimiter}{tableColumn.Name}{Query.FieldDelimiter} {tableColumn.DataTypeString}");
         if (tableColumn.Length > 0)
             columnBuilder.Append($" ({tableColumn.Length}{(tableColumn.Precision > 0 ? $",{tableColumn.Precision}" : "")})");
         if (columnType.IsEnum) {
@@ -505,6 +507,36 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
 		}
 
 		return value.ToString();
+    }
+
+    public string GetColumnDataTypeString(ColumnDataType type) {
+        return type switch {
+            ColumnDataType.Boolean   => "INTEGER",
+            ColumnDataType.Int16     => "INTEGER",
+            ColumnDataType.Int       => "INTEGER",
+            ColumnDataType.Int32     => "INTEGER",
+            ColumnDataType.Int64     => "INTEGER",
+            ColumnDataType.UInt16    => "INTEGER",
+            ColumnDataType.UInt      => "INTEGER",
+            ColumnDataType.UInt32    => "INTEGER",
+            ColumnDataType.UInt64    => "INTEGER",
+            ColumnDataType.Decimal   => "NUMERIC",
+            ColumnDataType.Float     => "REAL",
+            ColumnDataType.Double    => "REAL",
+            ColumnDataType.Text      => "TEXT",
+            ColumnDataType.Char      => "TEXT",
+            ColumnDataType.Varchar   => "TEXT",
+            ColumnDataType.Date      => "TEXT", // often stored as ISO string
+            ColumnDataType.DateTime  => "TEXT",
+            ColumnDataType.Time      => "TEXT",
+            ColumnDataType.Timestamp => "TEXT",
+            ColumnDataType.Binary    => "BLOB",
+            ColumnDataType.Guid      => "TEXT",
+            ColumnDataType.Json      => "TEXT",
+            ColumnDataType.Xml       => "TEXT",
+
+            _ => throw new NotSupportedException($"SQLite does not support {type}")
+        };
     }
     #endregion
 }

@@ -5,9 +5,22 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
+    <VersionPrefix>1.1.0</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Traber</Authors>
+    <Description>A multi-purpose database query building library. SQLite implementation.</Description>
+
+    <PackageProjectUrl>https://github.com/TraberSoftware/Unleasharp.DB.SQLite</PackageProjectUrl>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-    <PackageReference Include="Unleasharp.DB.Base" Version="1.0.2" />
+    <PackageReference Include="Unleasharp.DB.Base" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
