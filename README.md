@@ -20,7 +20,7 @@ dotnet add package Unleasharp.DB.SQLite
 
 ### PackageReference (Manual)
 ```xml
-<PackageReference Include="Unleasharp.DB.SQLite" Version="1.1.0" />
+<PackageReference Include="Unleasharp.DB.SQLite" Version="1.1.1" />
 ```
 
 ## 🎯 Features
