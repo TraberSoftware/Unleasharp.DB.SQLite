@@ -44,6 +44,7 @@ public class QueryBuilder : Base.QueryBuilder<QueryBuilder, Connector, Query, SQ
             }
         }
         catch (Exception ex) {
+            this._OnQueryException(ex);
         }
 
         return false;

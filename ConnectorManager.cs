@@ -6,27 +6,19 @@ using Unleasharp.DB.Base;
 
 namespace Unleasharp.DB.SQLite;
 
+/// <summary>
+/// Manager class for SQLite database connections that provides access to query builders
+/// for constructing and executing SQL queries.
+/// </summary>
 public class ConnectorManager : 
-    ConnectorManager<ConnectorManager, Connector, SQLiteConnectionStringBuilder>, 
-    IConnectorManager<QueryBuilder, Connector, Query, SQLiteConnection, SQLiteConnectionStringBuilder> 
+    ConnectorManager<ConnectorManager, Connector, SQLiteConnectionStringBuilder, SQLiteConnection, QueryBuilder, Query>
 {
-    public ConnectorManager()                                            : base() { }
-    public ConnectorManager(SQLiteConnectionStringBuilder stringBuilder) : base(stringBuilder) { }
-    public ConnectorManager(string connectionString)                     : base(connectionString) { }
+	/// <inheritdoc />
+	public ConnectorManager()                                            : base() { }
 
-    public QueryBuilder QueryBuilder() {
-        return new QueryBuilder(this.GetInstance());
-    }
+	/// <inheritdoc />
+	public ConnectorManager(SQLiteConnectionStringBuilder stringBuilder) : base(stringBuilder) { }
 
-    public QueryBuilder DetachedQueryBuilder() {
-        return new QueryBuilder(this.GetDetachedInstance());
-    }
-
-    public QueryBuilder QueryBuilder(Query query) {
-        return new QueryBuilder(this.GetInstance(), query);
-    }
-
-    public QueryBuilder DetachedQueryBuilder(Query query) {
-        return new QueryBuilder(this.GetDetachedInstance(), query);
-    }
+	/// <inheritdoc />
+	public ConnectorManager(string connectionString)                     : base(connectionString) { }
 }
