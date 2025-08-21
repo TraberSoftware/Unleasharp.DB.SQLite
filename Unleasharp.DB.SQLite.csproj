@@ -13,7 +13,7 @@
 
   <PropertyGroup>
     <Authors>Traber</Authors>
-    <Description>A multi-purpose database query building library. SQLite implementation.</Description>
+    <Description>Lightweight SQLite query-building client for C#.</Description>
 
     <PackageProjectUrl>https://github.com/TraberSoftware/Unleasharp.DB.SQLite</PackageProjectUrl>
   </PropertyGroup>
