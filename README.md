@@ -1,5 +1,7 @@
 ﻿# 💾 Unleasharp.DB.SQLite
 
+[![NuGet version (Unleasharp.DB.SQLite)](https://img.shields.io/nuget/v/Unleasharp.DB.SQLite.svg?style=flat-square)](https://www.nuget.org/packages/Unleasharp.DB.SQLite/)
+
 [![Unleasharp.DB.SQLite](https://socialify.git.ci/TraberSoftware/Unleasharp.DB.SQLite/image?description=1&font=Inter&logo=https%3A%2F%2Fraw.githubusercontent.com%2FTraberSoftware%2FUnleasharp%2Frefs%2Fheads%2Fmain%2Fassets%2Flogo-small.png&name=1&owner=1&pattern=Circuit+Board&theme=Light)](https://github.com/TraberSoftware/Unleasharp.DB.SQLite)
 
 SQLite implementation of Unleasharp.DB.Base. This repository provides a SQLite-specific implementation that leverages the base abstraction layer for common database operations.
@@ -46,7 +48,9 @@ ConnectorManager DBConnector = new ConnectorManager()
     .WithAutomaticConnectionRenewalInterval(TimeSpan.FromHours(1))
     .Configure(config => {
         config.ConnectionString = "Data Source=unleasharp.db;Version=3;";
-    });
+    })
+	.WithOnQueryExceptionAction(ex => Console.WriteLine(ex.Message))
+;
 ```
 
 ### Using SQLiteConnectionStringBuilder
@@ -67,28 +71,29 @@ using Unleasharp.DB.Base.SchemaDefinition;
 namespace Unleasharp.DB.SQLite.Sample;
 
 [Table("example_table")]
-public class ExampleTable 
-{
-    [Column("id", "integer", Unsigned = true, PrimaryKey = true, AutoIncrement = true, NotNull = true)]
-    public long? Id         { get; set; }
+[PrimaryKey("id")]
+[UniqueKey("id", "id", "_enum")]
+public class ExampleTable {
+    [Column("id",          ColumnDataType.UInt64, Unsigned = true, PrimaryKey = true, AutoIncrement = true, NotNull = true)]
+    public long?       Id              { get; set; }
 
-    [Column("_mediumtext", "text")]
-    public string MediumText { get; set; }
+    [Column("_mediumtext", ColumnDataType.Text)]
+    public string      MediumText      { get; set; }
 
-    [Column("_longtext", "text")]
-    public string Longtext  { get; set; }
+    [Column("_longtext",   ColumnDataType.Text)]
+    public string      Longtext        { get; set; }
 
-    [Column("_json", "text")]
-    public string Json      { get; set; }
+    [Column("_json",       ColumnDataType.Json)]
+    public string      Json            { get; set; }
 
-    [Column("_longblob", "blob")]
-    public byte[] CustomFieldName { get; set; }
+    [Column("_longblob",   ColumnDataType.Binary)]
+    public byte[]      CustomFieldName { get; set; }
 
-    [Column("_enum", "text")]
-    public EnumExample? Enum { get; set; }
+    [Column("_enum",       ColumnDataType.Enum)]
+    public CustomEnum? Enum            { get; set; }
 
-    [Column("_varchar", "varchar", Length = 255)]
-    public string Varchar { get; set; }
+    [Column("_varchar",    "varchar", Length = 255)]
+    public string      Varchar         { get; set; }
 }
 
 public enum EnumExample 
@@ -114,35 +119,37 @@ internal class Program
 {
     static void Main(string[] args) 
     {
-        // Initialize database connection
-        ConnectorManager DBConnector = new ConnectorManager("Data Source=unleasharp.db;Version=3;");
+		// Initialize database connection
+		ConnectorManager dbConnector = new ConnectorManager("Data Source=unleasharp.db;Version=3;")
+			.WithOnQueryExceptionAction(ex => Console.WriteLine(ex.Message))
+		;
         
-        // Create table
-        DBConnector.QueryBuilder().Build(Query => Query.Create<ExampleTable>()).Execute();
-        
+        // Create table if needed
+        dbConnector.QueryBuilder().Build(Query => Query.Create<ExampleTable>()).Execute();
+
         // Insert data
-        DBConnector.QueryBuilder().Build(Query => { Query
+        dbConnector.QueryBuilder().Build(Query => { Query
             .From<ExampleTable>()
             .Value(new ExampleTable {
                 MediumText = "Medium text example value",
-                _enum      = EnumExample.N
+                Enum       = EnumExample.N
             })
             .Values(new List<ExampleTable> {
                 new ExampleTable {
-                    _json           = @"{""sample_json_field"": ""sample_json_value""}",
-                    _enum           = EnumExample.Y,
+                    Json            = @"{""sample_json_field"": ""sample_json_value""}",
+                    Enum            = EnumExample.Y,
                     CustomFieldName = new byte[8] { 81,47,15,21,12,16,23,39 }
                 },
                 new ExampleTable {
-                    _longtext = "Long text example value",
-                    ID        = 999 // RandomID placeholder
+                    Longtext = "Long text example value",
+                    Id       = 999 // RandomID placeholder
                 }
             })
             .Insert();
         }).Execute();
         
         // Select single row
-        ExampleTable Row = DBConnector.QueryBuilder().Build(Query => Query
+        ExampleTable Row = dbConnector.QueryBuilder().Build(Query => Query
             .From("example_table")
             .OrderBy("id", OrderDirection.ASC)
             .Limit(1)
@@ -150,7 +157,7 @@ internal class Program
         ).FirstOrDefault<ExampleTable>();
         
         // Select multiple rows with different class naming
-        List<example_table> Rows = DBConnector.QueryBuilder().Build(Query => Query
+        List<example_table> Rows = dbConnector.QueryBuilder().Build(Query => Query
             .From("example_table")
             .OrderBy("id", OrderDirection.DESC)
             .Select()

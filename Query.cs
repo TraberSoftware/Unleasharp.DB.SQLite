@@ -396,15 +396,34 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
 		}).Where(renderedColumn => renderedColumn != null);
 	}
 
+    private bool __TableHasPrimaryKeyColumn(Type tableType) {
+        foreach (PropertyInfo tableProperty in tableType.GetProperties()) {
+            Column column = tableProperty.GetCustomAttribute<Column>();
+
+            if (column != null && column.PrimaryKey) {
+                return true;
+            }
+        }
+        foreach (FieldInfo tableField in tableType.GetFields()) {
+			Column column = tableField.GetCustomAttribute<Column>();
+
+			if (column != null && column.PrimaryKey) {
+				return true;
+			}
+		}
+        return false;
+	}
 
 	private IEnumerable<string?> __GetTableKeyDefinitions(Type tableType) {
         List<string> definitions = new List<string>();
 
         foreach (PrimaryKey pKey in tableType.GetCustomAttributes<PrimaryKey>()) {
-            definitions.Add(
-                $"CONSTRAINT {Query.FieldDelimiter}pk_{pKey.Name}{Query.FieldDelimiter} PRIMARY KEY" +
-                $"({string.Join(", ", pKey.Columns.Select(column => $"{Query.FieldDelimiter}{column}{Query.FieldDelimiter}"))})"
-            );
+            if (!this.__TableHasPrimaryKeyColumn(tableType)) {
+                definitions.Add(
+                    $"CONSTRAINT {Query.FieldDelimiter}pk_{pKey.Name}{Query.FieldDelimiter} PRIMARY KEY" +
+                    $"({string.Join(", ", pKey.Columns.Select(column => $"{Query.FieldDelimiter}{column}{Query.FieldDelimiter}"))})"
+                );
+            }
         }
         foreach (UniqueKey uKey in tableType.GetCustomAttributes<UniqueKey>()) {
 	        definitions.Add(
@@ -438,7 +457,7 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
 
         string columnDataTypeString = tableColumn.DataTypeString ?? this.GetColumnDataTypeString(tableColumn.DataType);
 
-        StringBuilder columnBuilder = new StringBuilder($"{Query.FieldDelimiter}{tableColumn.Name}{Query.FieldDelimiter} {tableColumn.DataTypeString}");
+        StringBuilder columnBuilder = new StringBuilder($"{Query.FieldDelimiter}{tableColumn.Name}{Query.FieldDelimiter} {columnDataTypeString}");
         if (tableColumn.Length > 0)
             columnBuilder.Append($" ({tableColumn.Length}{(tableColumn.Precision > 0 ? $",{tableColumn.Precision}" : "")})");
         if (columnType.IsEnum) {
