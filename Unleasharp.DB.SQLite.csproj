@@ -16,7 +16,12 @@
     <Description>Lightweight SQLite query-building client for C#.</Description>
 
     <PackageProjectUrl>https://github.com/TraberSoftware/Unleasharp.DB.SQLite</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
