@@ -13,12 +13,12 @@ namespace Unleasharp.DB.SQLite;
 public class ConnectorManager : 
     ConnectorManager<ConnectorManager, Connector, SQLiteConnectionStringBuilder, SQLiteConnection, QueryBuilder, Query>
 {
-	/// <inheritdoc />
-	public ConnectorManager()                                            : base() { }
+    /// <inheritdoc />
+    public ConnectorManager()                                            : base() { }
 
-	/// <inheritdoc />
-	public ConnectorManager(SQLiteConnectionStringBuilder stringBuilder) : base(stringBuilder) { }
+    /// <inheritdoc />
+    public ConnectorManager(SQLiteConnectionStringBuilder stringBuilder) : base(stringBuilder) { }
 
-	/// <inheritdoc />
-	public ConnectorManager(string connectionString)                     : base(connectionString) { }
+    /// <inheritdoc />
+    public ConnectorManager(string connectionString)                     : base(connectionString) { }
 }

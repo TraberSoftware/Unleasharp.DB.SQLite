@@ -391,10 +391,10 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
         PropertyInfo[] tableProperties = tableType.GetProperties();
         FieldInfo   [] tableFields     = tableType.GetFields();
 
-		return tableProperties.Select(tableProperty => {
-			return this.__GetColumnDefinition(tableProperty, tableProperty.GetCustomAttribute<Column>());
-		}).Where(renderedColumn => renderedColumn != null);
-	}
+        return tableProperties.Select(tableProperty => {
+            return this.__GetColumnDefinition(tableProperty, tableProperty.GetCustomAttribute<Column>());
+        }).Where(renderedColumn => renderedColumn != null);
+    }
 
     private bool __TableHasPrimaryKeyColumn(Type tableType) {
         foreach (PropertyInfo tableProperty in tableType.GetProperties()) {
@@ -405,16 +405,16 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
             }
         }
         foreach (FieldInfo tableField in tableType.GetFields()) {
-			Column column = tableField.GetCustomAttribute<Column>();
+            Column column = tableField.GetCustomAttribute<Column>();
 
-			if (column != null && column.PrimaryKey) {
-				return true;
-			}
-		}
+            if (column != null && column.PrimaryKey) {
+                return true;
+            }
+        }
         return false;
-	}
+    }
 
-	private IEnumerable<string?> __GetTableKeyDefinitions(Type tableType) {
+    private IEnumerable<string?> __GetTableKeyDefinitions(Type tableType) {
         List<string> definitions = new List<string>();
 
         foreach (PrimaryKey pKey in tableType.GetCustomAttributes<PrimaryKey>()) {
@@ -426,10 +426,10 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
             }
         }
         foreach (UniqueKey uKey in tableType.GetCustomAttributes<UniqueKey>()) {
-	        definitions.Add(
-		        $"CONSTRAINT {Query.FieldDelimiter}uk_{uKey.Name}{Query.FieldDelimiter} UNIQUE " +
-		        $"({string.Join(", ", uKey.Columns.Select(column => $"{Query.FieldDelimiter}{column}{Query.FieldDelimiter}"))})"
-	        );
+            definitions.Add(
+                $"CONSTRAINT {Query.FieldDelimiter}uk_{uKey.Name}{Query.FieldDelimiter} UNIQUE " +
+                $"({string.Join(", ", uKey.Columns.Select(column => $"{Query.FieldDelimiter}{column}{Query.FieldDelimiter}"))})"
+            );
         }
         foreach (ForeignKey fKey in tableType.GetCustomAttributes<ForeignKey>()) {
             definitions.Add(
@@ -464,7 +464,7 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
 
             List<string> enumValues = new List<string>();
 
-			bool first = true;
+            bool first = true;
             foreach (Enum enumValue in Enum.GetValues(columnType)) {
                 if (first) {
                     first = false;
@@ -485,9 +485,9 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
 
         if (tableColumn.PrimaryKey)
             columnBuilder.Append(" PRIMARY KEY");
-		if (tableColumn.AutoIncrement)
-			columnBuilder.Append(" AUTOINCREMENT");
-		if (tableColumn.NotNull)
+        if (tableColumn.AutoIncrement)
+            columnBuilder.Append(" AUTOINCREMENT");
+        if (tableColumn.NotNull)
             columnBuilder.Append(" NOT NULL");
         if (tableColumn.Unique && !tableColumn.PrimaryKey)
             columnBuilder.Append(" UNIQUE");
@@ -516,10 +516,10 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
             }
         }
         if (value is Enum) {
-			return $"{ValueDelimiter}{((Enum)value).GetDescription()}{ValueDelimiter}";
-		}
+            return $"{ValueDelimiter}{((Enum)value).GetDescription()}{ValueDelimiter}";
+        }
 
-		return value.ToString();
+        return value.ToString();
     }
 
     public string GetColumnDataTypeString(ColumnDataType type) {
