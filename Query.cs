@@ -522,7 +522,7 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
         return value.ToString();
     }
 
-    public string GetColumnDataTypeString(ColumnDataType type) {
+    public string GetColumnDataTypeString(ColumnDataType? type) {
         return type switch {
             ColumnDataType.Boolean   => "INTEGER",
             ColumnDataType.Int16     => "INTEGER",
