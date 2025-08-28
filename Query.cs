@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Unleasharp.DB.Base.ExtensionMethods;
 using Unleasharp.DB.Base.QueryBuilding;
 using Unleasharp.DB.Base.SchemaDefinition;
 using Unleasharp.ExtensionMethods;
@@ -421,14 +422,14 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
             if (!this.__TableHasPrimaryKeyColumn(tableType)) {
                 definitions.Add(
                     $"CONSTRAINT {Query.FieldDelimiter}pk_{pKey.Name}{Query.FieldDelimiter} PRIMARY KEY" +
-                    $"({string.Join(", ", pKey.Columns.Select(column => $"{Query.FieldDelimiter}{this._GetKeyColumnName(tableType, column)}{Query.FieldDelimiter}"))})"
+                    $"({string.Join(", ", pKey.Columns.Select(column => $"{Query.FieldDelimiter}{tableType.GetColumnName(column)}{Query.FieldDelimiter}"))})"
                 );
             }
         }
         foreach (UniqueKey uKey in tableType.GetCustomAttributes<UniqueKey>()) {
             definitions.Add(
                 $"CONSTRAINT {Query.FieldDelimiter}uk_{uKey.Name}{Query.FieldDelimiter} UNIQUE " +
-                $"({string.Join(", ", uKey.Columns.Select(column => $"{Query.FieldDelimiter}{this._GetKeyColumnName(tableType, column)}{Query.FieldDelimiter}"))})"
+                $"({string.Join(", ", uKey.Columns.Select(column => $"{Query.FieldDelimiter}{tableType.GetColumnName(column)}{Query.FieldDelimiter}"))})"
             );
         }
         foreach (ForeignKey fKey in tableType.GetCustomAttributes<ForeignKey>()) {
