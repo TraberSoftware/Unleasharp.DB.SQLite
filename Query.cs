@@ -12,6 +12,8 @@ using Unleasharp.ExtensionMethods;
 namespace Unleasharp.DB.SQLite;
 
 public class Query : Unleasharp.DB.Base.Query<Query> {
+    protected override DatabaseEngine _Engine { get { return DatabaseEngine.SQLite; } }
+
     #region Custom SQLite query data
     #endregion
 
