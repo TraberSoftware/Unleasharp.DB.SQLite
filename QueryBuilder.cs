@@ -35,6 +35,7 @@ public class QueryBuilder : Base.QueryBuilder<QueryBuilder, Connector, Query, SQ
                         }
                         break;
                     case Base.QueryBuilding.QueryType.SELECT:
+                    case Base.QueryBuilding.QueryType.SELECT_UNION:
                         using (SQLiteDataReader queryReader = queryCommand.ExecuteReader()) {
                             this._HandleQueryResult(queryReader);
                         }
