@@ -412,8 +412,14 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
     protected override string _RenderInsertIntoSentence() { 
         From<Query> from = this.QueryFrom.FirstOrDefault();
 
+        string onQueryConflictSentence = this.QueryOnConflict switch {
+            OnInsertConflict.NONE   => string.Empty,
+            OnInsertConflict.IGNORE => "OR IGNORE",
+            OnInsertConflict.UPDATE => "OR REPLACE"
+        };
+
         if (from != null) {
-            return $"INSERT INTO {from.Table} ({string.Join(',', this.QueryColumns)})";
+            return $"INSERT {onQueryConflictSentence} INTO {from.Table} ({string.Join(',', this.QueryColumns)})";
         }
 
         return string.Empty;
@@ -442,6 +448,11 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
         }
 
         return (rendered.Count > 0 ? "VALUES " + string.Join(',', rendered) : "");
+    }
+
+    /// <inheritdoc/>
+    protected override string _RenderInsertOnConflictSentence() {
+        return string.Empty;
     }
 
     /// <inheritdoc/>
