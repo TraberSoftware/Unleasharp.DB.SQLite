@@ -241,10 +241,7 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
             }
         }
         else {
-            // If this is a UNION query, avoid adding * to the select
-            if (this.QueryType != QueryType.SELECT_UNION) {
-                rendered.Add("*");
-            }
+            rendered.Add("*");
         }
 
         return rendered.Count > 0 ? $"SELECT {(this.QueryDistinct ? "DISTINCT " : "")}{string.Join(',', rendered)}" : "";
@@ -691,30 +688,33 @@ public class Query : Unleasharp.DB.Base.Query<Query> {
     /// <exception cref="NotSupportedException">Thrown if the specified <paramref name="type"/> is not supported by SQLite or is <c>null</c>.</exception>
     public string GetColumnDataTypeString(ColumnDataType? type) {
         return type switch {
-            ColumnDataType.Boolean   => "INTEGER",
-            ColumnDataType.Int16     => "INTEGER",
-            ColumnDataType.Int       => "INTEGER",
-            ColumnDataType.Int32     => "INTEGER",
-            ColumnDataType.Int64     => "INTEGER",
-            ColumnDataType.UInt16    => "INTEGER",
-            ColumnDataType.UInt      => "INTEGER",
-            ColumnDataType.UInt32    => "INTEGER",
-            ColumnDataType.UInt64    => "INTEGER",
-            ColumnDataType.Decimal   => "NUMERIC",
-            ColumnDataType.Float     => "REAL",
-            ColumnDataType.Double    => "REAL",
-            ColumnDataType.Text      => "TEXT",
-            ColumnDataType.Char      => "TEXT",
-            ColumnDataType.Varchar   => "TEXT",
-            ColumnDataType.Enum      => "TEXT",
-            ColumnDataType.Date      => "TEXT", // often stored as ISO string
-            ColumnDataType.DateTime  => "TEXT",
-            ColumnDataType.Time      => "TEXT",
-            ColumnDataType.Timestamp => "TEXT",
-            ColumnDataType.Binary    => "BLOB",
-            ColumnDataType.Guid      => "TEXT",
-            ColumnDataType.Json      => "TEXT",
-            ColumnDataType.Xml       => "TEXT",
+            ColumnDataType.Boolean    => "INTEGER",
+            ColumnDataType.Int16      => "INTEGER",
+            ColumnDataType.Int        => "INTEGER",
+            ColumnDataType.Int32      => "INTEGER",
+            ColumnDataType.Int64      => "INTEGER",
+            ColumnDataType.UInt16     => "INTEGER",
+            ColumnDataType.UInt       => "INTEGER",
+            ColumnDataType.UInt32     => "INTEGER",
+            ColumnDataType.UInt64     => "INTEGER",
+            ColumnDataType.Decimal    => "NUMERIC",
+            ColumnDataType.Float      => "REAL",
+            ColumnDataType.Double     => "REAL",
+            ColumnDataType.TinyText   => "TEXT",
+            ColumnDataType.Text       => "TEXT",
+            ColumnDataType.MediumText => "TEXT",
+            ColumnDataType.LongText   => "TEXT",
+            ColumnDataType.Char       => "TEXT",
+            ColumnDataType.Varchar    => "TEXT",
+            ColumnDataType.Enum       => "TEXT",
+            ColumnDataType.Date       => "TEXT", // often stored as ISO string
+            ColumnDataType.DateTime   => "TEXT",
+            ColumnDataType.Time       => "TEXT",
+            ColumnDataType.Timestamp  => "TEXT",
+            ColumnDataType.Binary     => "BLOB",
+            ColumnDataType.Guid       => "TEXT",
+            ColumnDataType.Json       => "TEXT",
+            ColumnDataType.Xml        => "TEXT",
 
             _ => throw new NotSupportedException($"SQLite does not support {type}")
         };
